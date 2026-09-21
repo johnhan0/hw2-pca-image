@@ -1,0 +1,254 @@
+---
+title: 'HW2: PCA'
+author: "John Han"
+date: "2026-09-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## My Compression Code
+
+```{r}
+library(readr)
+
+compress = function(X, k) {
+
+  pca = prcomp(X, center = FALSE, scale. = FALSE)
+  
+  U = pca$rotation
+  Z = pca$x
+  
+  X_k = Z[, 1:k, drop = FALSE] %*% t(U[, 1:k, drop = FALSE])
+  
+  error_k = norm(X - X_k, type = "F")
+  
+  list(approx = X_k, error = error_k, first_eig = U[,1], first_pcs = Z[,1])
+}
+```
+
+## Image 1
+
+### Read in data
+
+```{r message=FALSE}
+x <- read_csv("data/image1.csv")
+x <- data.matrix(x)
+```
+
+### Original and first 10 k's
+
+```{r}
+ks = 1:10
+all_approx = vector("list", 10)
+for(i in ks){
+  comp = compress(x, i)
+  all_approx[[i]] = comp$approx
+}
+
+par(mfrow = c(4, 3), mar = c(1,1,2,1))
+image(x, main = "Original", axes = F)
+for(i in ks){
+  image(all_approx[[i]], main = paste("k = ", i), axes = F)
+}
+
+```
+
+### Error vs. k's
+
+```{r}
+p = dim(x)[2]
+all_k = 1:p
+all_error = numeric(p)
+for(i in all_k){
+  comp = compress(x, i)
+  all_error[i] = comp$error
+}
+
+plot(all_k, all_error)
+
+```
+
+
+### First Eigenvalues and PC Scores
+
+```{r}
+first = compress(x, 1)
+plot(first$first_eig)
+plot(first$first_pcs)
+
+```
+
+### Which k is "sufficient"?
+
+Since the first eigenvalue chart shows only one index that is not close to zero, we can argue that even k=1 is sufficient enough approximation. To further support this k value, we can see that the error vs. k graph shows a linear relationship until the very end of the k values. This means that an increase in k-value reduces the error roughly the same amount every step. So I believe even at k=1, the approximation shows a sufficiently good approximation of the original image. 
+
+## Image 2
+
+### Read in data
+
+```{r message=FALSE}
+x <- read_csv("data/image2.csv")
+x <- data.matrix(x)
+```
+
+### Original and first 10 k's
+
+```{r}
+ks = 1:10
+all_approx = vector("list", 10)
+for(i in ks){
+  comp = compress(x, i)
+  all_approx[[i]] = comp$approx
+}
+
+par(mfrow = c(4, 3), mar = c(1,1,2,1))
+image(x, main = "Original", axes = F)
+for(i in ks){
+  image(all_approx[[i]], main = paste("k = ", i), axes = F)
+}
+
+```
+
+### Error vs. k's
+
+```{r}
+p = dim(x)[2]
+all_k = 1:p
+all_error = numeric(p)
+for(i in all_k){
+  comp = compress(x, i)
+  all_error[i] = comp$error
+}
+
+plot(all_k, all_error)
+
+```
+
+
+### First Eigenvalues and PC Scores
+
+```{r}
+first = compress(x, 1)
+plot(first$first_eig)
+plot(first$first_pcs)
+
+```
+
+### Which k is "sufficient"?
+
+Since the first eigenvalue chart shows only one index that is not close to zero, we can argue that even k=1 is sufficient enough approximation. To further support this k value, we can see that the error vs. k graph shows a linear relationship between k value and the error. This means that an increase in k-value reduces the error roughly the same amount every step. So I believe even at k=1, the approximation shows a sufficiently good approximation of the original image. 
+
+## Image 3
+
+### Read in data
+
+```{r message=FALSE}
+x <- read_csv("data/image3.csv")
+x <- data.matrix(x)
+```
+
+### Original and first 10 k's
+
+```{r}
+ks = 1:10
+all_approx = vector("list", 10)
+for(i in ks){
+  comp = compress(x, i)
+  all_approx[[i]] = comp$approx
+}
+
+par(mfrow = c(4, 3), mar = c(1,1,2,1))
+image(x, main = "Original", axes = F)
+for(i in ks){
+  image(all_approx[[i]], main = paste("k = ", i), axes = F)
+}
+
+```
+
+### Error vs. k's
+
+```{r}
+p = dim(x)[2]
+all_k = 1:p
+all_error = numeric(p)
+for(i in all_k){
+  comp = compress(x, i)
+  all_error[i] = comp$error
+}
+
+plot(all_k, all_error)
+```
+
+
+### First Eigenvalues and PC Scores
+
+```{r}
+first = compress(x, 1)
+plot(first$first_eig)
+plot(first$first_pcs)
+
+```
+
+### Which k is "sufficient"?
+
+Looking at the error vs. k graph we can see an elbow of the curve that tells us that anything beyond the elbow decreases in the amount the error is reduced. The elbow is typically a nice fair point for a sufficiently good approximation. In this case, I think a k=20 is a sufficiently good approximation of the original image.
+
+
+## Image 4
+
+### Read in data
+
+```{r message=FALSE}
+x <- read_csv("data/image4.csv")
+x <- data.matrix(x)
+```
+
+### Original and first 10 k's
+
+```{r}
+ks = 1:10
+all_approx = vector("list", 10)
+for(i in ks){
+  comp = compress(x, i)
+  all_approx[[i]] = comp$approx
+}
+
+par(mfrow = c(4, 3), mar = c(1,1,2,1))
+image(x, main = "Original", axes = F)
+for(i in ks){
+  image(all_approx[[i]], main = paste("k = ", i), axes = F)
+}
+
+```
+
+### Error vs. k's
+
+```{r}
+p = dim(x)[2]
+all_k = 1:p
+all_error = numeric(p)
+for(i in all_k){
+  comp = compress(x, i)
+  all_error[i] = comp$error
+}
+
+plot(all_k, all_error)
+
+```
+
+
+### First Eigenvalues and PC Scores
+
+```{r}
+first = compress(x, 1)
+plot(first$first_eig)
+plot(first$first_pcs)
+
+```
+
+### Which k is "sufficient"?
+
+Looking at the error vs. k graph we can see an elbow of the curve that tells us that anything beyond the elbow decreases in the amount the error is reduced. The elbow is typically a nice fair point for a sufficiently good approximation. In this case, I think a k=12 is a sufficiently good approximation of the original image.
